@@ -12,8 +12,6 @@ services:
         networks:
             - docker-network
         restart: always
-    wordpress:
-    nginx:
 
 volumes:
     db:
