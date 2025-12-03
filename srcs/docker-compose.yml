@@ -18,7 +18,7 @@ volumes:
        driver_opts:
           type: 'none'
           o: bind
-          device: /home/jetan/database
+          device: /home/jetan/data/database
 
 networks:
     docker-network:
