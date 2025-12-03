@@ -13,12 +13,32 @@ services:
             - docker-network
         restart: always
 
+    wordpress:
+        build: ./requirements/wordpress
+        image: wordpress
+        container_name: wordpress
+        volumes:
+            - wp:/var/www/html
+        depends_on:
+            - mariadb
+        expose:
+            - "9000"
+        env_file:
+            - ./.env
+        networks:
+            - docker-network
+        restart: always
 volumes:
     db:
-       driver_opts:
-          type: 'none'
-          o: bind
-          device: /home/jetan/data/database
+        driver_opts:
+            type: 'none'
+            o: bind
+            device: /home/jetan/data/database
+    wp:
+        driver_opts:
+            type: 'none'
+            o: bind
+            device: /home/jetan/data/wordpress
 
 networks:
     docker-network:
