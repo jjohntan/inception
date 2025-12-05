@@ -28,6 +28,21 @@ services:
         networks:
             - docker-network
         restart: always
+
+    nginx:
+        build: ./requirements/nginx
+        image: nginx
+        container_name: nginx
+        volumes:
+            - wp:/var/www/html
+        depends_on:
+            - wordpress
+        ports:
+            - 443:443
+        networks:
+            - docker-network
+        restart: always
+
 volumes:
     db:
         driver_opts:
