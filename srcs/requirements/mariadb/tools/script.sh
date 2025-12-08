@@ -1,11 +1,11 @@
 #!/bin/bash
 
-# 1. Prepare environment
+# prepare environment
 mkdir -p /var/run/mysqld
 chown -R mysql:mysql /var/run/mysqld
 chmod 777 /var/run/mysqld
 
-# 2. Install Base Data (Only if missing)
+# install Base Data (Only if missing)
 if [ ! -d "/var/lib/mysql/mysql" ]; then
     echo "Installing base MariaDB data..."
     mysql_install_db --user=mysql --datadir=/var/lib/mysql
@@ -13,9 +13,8 @@ else
     echo "MariaDB data already exists."
 fi
 
-# 3. FIX PERMISSIONS (Run this EVERY time)
-# We run the bootstrap block every startup to ensure the user 
-# and the permissions are always correct (fixes Error 1130).
+# run the bootstrap block every startup to ensure the user 
+# and the permissions are always correct
 echo "Updating MariaDB permissions..."
 
 mysqld --user=mysql --bootstrap << EOF
@@ -40,6 +39,6 @@ GRANT ALL PRIVILEGES ON $MYSQL_DATABASE.* TO '$MYSQL_USER'@'%';
 FLUSH PRIVILEGES;
 EOF
 
-# 4. Start the server
+# Start the server
 echo "Starting MariaDB..."
 exec mysqld --user=mysql --bind-address=0.0.0.0

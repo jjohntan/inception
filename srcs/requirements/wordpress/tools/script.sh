@@ -46,6 +46,10 @@ if [ ! -f wp-config.php ]; then
     wp user create $WP_USER_LOGIN $WP_USER_EMAIL --role=author --user_pass=$WP_USER_PASSWORD --allow-root
 fi
 
+echo "Fixing permissions..."
+chmod -R 755 /var/www/html
+chown -R www-data:www-data /var/www/html
+
 # Start PHP-FPM
 echo "Starting PHP-FPM 8.2..."
 exec /usr/sbin/php-fpm8.2 -F
