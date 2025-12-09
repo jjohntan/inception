@@ -1,30 +1,30 @@
 #!/bin/bash
 
-# Install WP-CLI (Since it's not in the Dockerfile)
+# install wp-cli
 if [ ! -f /usr/local/bin/wp ]; then
     curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
     chmod +x wp-cli.phar
     mv wp-cli.phar /usr/local/bin/wp
 fi
 
-# Configure PHP-FPM (CRITICAL FIX)
-# Debian Bookworm uses PHP 8.2. We must listen on port 9000, not a socket.
+# configure php-fpm
+# debian bookworm uses PHP 8.2. must listen on port 9000, not a socket.
 sed -i 's|listen = /run/php/php8.2-fpm.sock|listen = 9000|g' /etc/php/8.2/fpm/pool.d/www.conf
 mkdir -p /run/php
 
-# Navigate to volume
+# navigate to volume
 cd /var/www/html
 
 sleep 5
 
-# Main Installation Logic
+# main installation Logic
 if [ ! -f wp-config.php ]; then
     
     echo "Downloading WordPress..."
     wp core download --allow-root
 
     echo "Creating Config..."
-    # Note: Using standard .env variable names (MYSQL_...)
+    # using standard .env variable names
     wp config create \
         --dbname=$MYSQL_DATABASE \
         --dbuser=$MYSQL_USER \
@@ -45,10 +45,6 @@ if [ ! -f wp-config.php ]; then
     # Create Author User
     wp user create $WP_USER_LOGIN $WP_USER_EMAIL --role=author --user_pass=$WP_USER_PASSWORD --allow-root
 fi
-
-echo "Fixing permissions..."
-chmod -R 755 /var/www/html
-chown -R www-data:www-data /var/www/html
 
 # Start PHP-FPM
 echo "Starting PHP-FPM 8.2..."

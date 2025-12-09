@@ -17,6 +17,8 @@ fi
 # and the permissions are always correct
 echo "Updating MariaDB permissions..."
 
+# flush privileges: reloads user permission data from the grant tables into memory,
+# forcing the server to apply changes made directly to those system tables without needing a full server restart
 mysqld --user=mysql --bootstrap << EOF
 USE mysql;
 FLUSH PRIVILEGES;
